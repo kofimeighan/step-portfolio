@@ -4,6 +4,65 @@
   width: 650px;
 }
 
+headerbox{
+    display: inline-block;
+    Width: 1000px;
+    height: 500px;
+    text-align: left;
+}
+
+rightheaderbox {
+    display: inline-block;
+    width: 155px;
+    height: 200px;
+    text-align: right;
+}
+
+header 
+
 #greeting-container {
   margin-top: 20px;
+}
+
+.info {
+    list-style-position: left;
+    list-style-type: none;
+    text-align: center;
+    margin: 0;
+    padding 0;
+    align-content: left;
+}
+
+.info li {
+    text-align: left;
+    font size: 30px;
+    padding: 0;
+}
+.nav {
+    list-style-type: none;
+    text-align: center;
+    margin: 0;
+    padding:0;
+}
+
+.nav li {
+    display: inline-block;
+    font size: 100px;
+    padding: 30px;
+}
+
+* {
+    box-sizing: border-box;
+}
+/*add a border */
+.column {
+    float: left;
+    width: 33.33%;
+    padding 5px;
+}
+
+.row::after {
+    content: "";
+    clear: both;
+    display: table;
 }
