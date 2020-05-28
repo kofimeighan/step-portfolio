@@ -4,20 +4,6 @@
   width: 650px;
 }
 
-headerbox{
-    display: inline-block;
-    Width: 1000px;
-    height: 500px;
-    text-align: left;
-}
-
-rightheaderbox {
-    display: inline-block;
-    width: 155px;
-    height: 200px;
-    text-align: right;
-}
-
 .info {
     list-style-position: left;
     list-style-type: none;
@@ -32,6 +18,7 @@ rightheaderbox {
     font size: 30px;
     padding: 0;
 }
+
 .nav {
     list-style-type: none;
     text-align: center;
@@ -48,11 +35,12 @@ rightheaderbox {
 * {
     box-sizing: border-box;
 }
-/*add a border */
+
 .column {
     float: left;
     width: 33.33%;
     padding 50px;
+    border: 5px black;
 }
 
 .row::after {
