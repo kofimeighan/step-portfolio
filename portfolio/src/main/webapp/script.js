@@ -26,3 +26,13 @@ function addRandomGreeting() {
   const greetingContainer = document.getElementById('greeting-container');
   greetingContainer.innerText = greeting;
 }
+
+function sayHello() {
+  console.log("Fetching a Hello");
+
+  fetch('/data').then(response => response.json()).then((jsonString) => {
+    console.log(jsonString);
+    document.getElementById('hello-container').innerText = jsonString; });
+
+}
+
