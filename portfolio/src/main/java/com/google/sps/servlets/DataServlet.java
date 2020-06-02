@@ -35,7 +35,8 @@ public class DataServlet extends HttpServlet {
     hello = "Hello Kofi!";
   }
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+  public void doGet(HttpServletRequest request, HttpServletResponse response)
+   throws IOException {
     
     String json = convertToJson(messages);
 
