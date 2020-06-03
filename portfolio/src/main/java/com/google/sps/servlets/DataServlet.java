@@ -14,6 +14,14 @@
 
 package com.google.sps.servlets;
 
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,54 +34,74 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-  //private final Date submitTime = new Date();
   private ArrayList<String> messages;
 
   public void init() {
-    //submitTime = new Date();
-    messages = new ArrayList<String>();
+      //submitTime = new Date();
+      messages = new ArrayList<String>();
   }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-   throws IOException {
+  throws IOException {
 
-    //Date submitTime = new Date();
-    response.setContentType("application/json");
-    String json = convertToJson(messages);
-    response.getWriter().println(json);
+      Query query = new Query("Task//");//.addSort("timestamp", SortDirection.DESCENDING);
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      PreparedQuery results = datastore.prepare(query);
+    
+      for (Entity entity : results.asIterable()) {
+          long id = entity.getKey().getId();
+          String message = (String) entity.getProperty("message");
+          messages.add(message);
+      }
 
-    //response.setContentType("text/html;");
-    //response.getWriter().println("<h1>Hello world!</h1>");
-    //response.getWriter().println("<body>"+json+"</body>");
+      response.setContentType("application/json;");
+      response.getWriter().println(convertToJsonUsingGson(messages));
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String htmlMessage = request.getParameter("clientMessage");
-    System.out.println(htmlMessage);
-    messages.add(htmlMessage);
-    //Gson gson = new Gson();
-    String json = convertToJson(messages);
+      String clientMessage = request.getParameter("clientMessage");
+      long timeStamp = System.currentTimeMillis();
 
-    response.sendRedirect("/index.html");
+      /*System.out.println(htmlMessage);
+      messages.add(htmlMessage);
+      Gson gson = new Gson();
+      String json = convertToJson(clientMessage));*/
+      Entity messageEntity = new Entity("Messages");
+      messageEntity.setProperty("message", clientMessage);
+      messageEntity.setProperty("timestamp", timeStamp);
+
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      datastore.put(messageEntity);
+
+      response.sendRedirect("/index.html");
 
     }
 
-  private String convertToJson(ArrayList<String> messageList) {
-    String json = "{ \"message\" :";
-    for(int i = 0; i<messageList.size();i++){
-      json += " \"message\" : ";
-      json += "\""+messageList.get(i)+"\""+", ";
-      if(i!=(messageList.size()-1)){
-        json += ", ";
-        }
-      else{
-        json += " }";
-        }
-    }
-
-    return json;
+  private String convertToJsonUsingGson(ArrayList<String> messageList) {
+      Gson gson = new Gson();
+      String json = gson.toJson(messageList);
+    
+      return json;
   }
 
+  private String convertToJson(ArrayList<String> messageList) {
+      String json = "[ { ";
+      for(int i = 0; i<(messageList.size());i= i+2){
+          json += " \"message\" : ";
+          json += "\""+messageList.get(i)+"\", ";
+          json += " \"timestamp\" : ";
+          json += "\""+messageList.get(i+1)+"\"";
+
+          if(i !=(messageList.size()-1)){
+              json += ", ";
+          }
+          else{
+            json += " }";
+          }
+      }
+
+      return json;
+  }
 }
