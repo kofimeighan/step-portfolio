@@ -16,6 +16,7 @@ package com.google.sps.servlets;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -25,32 +26,54 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-  private String hello;
-  private ArrayList<String> messages = new ArrayList<String>();
+  //private final Date submitTime = new Date();
+  private ArrayList<String> messages;
 
   public void init() {
-    messages.add("First message");
-    messages.add("Second message!!~~");
-    messages.add("Third message!@#$%^&");
-    hello = "Hello Kofi!";
+    //submitTime = new Date();
+    messages = new ArrayList<String>();
   }
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
    throws IOException {
-    
-    String json = convertToJson(messages);
 
-    response.setContentType("text/html;");
-    response.getWriter().println("<h1>Hello world!</h1>");
-    response.getWriter().println("<body>"+json+"</body>");
+    //Date submitTime = new Date();
+    response.setContentType("application/json");
+    String json = convertToJson(messages);
+    response.getWriter().println(json);
+
+    //response.setContentType("text/html;");
+    //response.getWriter().println("<h1>Hello world!</h1>");
+    //response.getWriter().println("<body>"+json+"</body>");
   }
 
-  private String convertToJson(ArrayList<String> arrayList) {
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String htmlMessage = request.getParameter("clientMessage");
+    System.out.println(htmlMessage);
+    messages.add(htmlMessage);
+    //Gson gson = new Gson();
+    String json = convertToJson(messages);
+
+    response.sendRedirect("/index.html");
+
+    }
+
+  private String convertToJson(ArrayList<String> messageList) {
     String json = "{ \"message\" :";
-    json += "\""+arrayList.get(0)+"\""+", ";
-    json += "\"message\" : "+"\""+arrayList.get(1)+"\"" + ", ";
-    json += "\"message\" : "+"\""+arrayList.get(2)+"\""+" }";
+    for(int i = 0; i<messageList.size();i++){
+      json += " \"message\" : ";
+      json += "\""+messageList.get(i)+"\""+", ";
+      if(i!=(messageList.size()-1)){
+        json += ", ";
+        }
+      else{
+        json += " }";
+        }
+    }
 
     return json;
   }
+
 }
