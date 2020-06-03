@@ -36,3 +36,28 @@ function sayHello() {
 
 }
 
+async function getMessage() {
+  console.log("Getting the message");
+
+  /*fetch('/data').then(response => response.json()).then((messageLog) => {
+  const messageElement = document.getElementById('message-container'); 
+  console.log(messageLog);
+  });*/
+    
+  const response = await fetch('/data');
+  const message = await response.json();
+  document.getElementById('message-container').innerText = '';
+  console.log(message);
+
+  const messageHistory = document.getElementById('data-page-message-container');
+  messageHistory.innerHTML = '';
+  messageHistory.appendChild(createListElement(message));
+
+}
+
+function createListElement(text) {
+  const liElement = document.createElement('li');
+  liElement.innerText = text;
+  return liElement;
+}
+
