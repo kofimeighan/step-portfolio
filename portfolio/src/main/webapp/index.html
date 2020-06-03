@@ -45,5 +45,17 @@
              class="border"
              alt="Kofi & Dylan">
 
+      <body onload="getMessage()">       
+        <h5><b>Leave me a message!</b></h5>
+          <form action="/data" method="POST">
+            <p>Message:</p>
+            <input type="text" name="clientMessage">
+            <input type="submit" value="Send">
+            <h1 id="message-container"></h1>
+          </form>
+      </body>
+      <ul id="data-page-message-container"></ul>
+
+
   </body>
 </html>
