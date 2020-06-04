@@ -21,6 +21,7 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.*;
@@ -34,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 public class DataServlet extends HttpServlet {
 
   private List<String> messages;
+  //add constant names
 
   public void init() {
       messages = new ArrayList<String>();
@@ -43,36 +45,60 @@ public class DataServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
               throws IOException {
 
-      Query query = new Query("messageEntity//");
+      Query query = new Query("Messages");//.setLimit(3);//.addSort("timestamp", SortDirection.DESCENDING);
       DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
       PreparedQuery results = datastore.prepare(query);
-    
-      for (Entity entity : results.asIterable()) {
-          long id = entity.getKey().getId();
-          String message = (String) entity.getProperty("message");
-          messages.add(message);
-      }
 
+      List<Entity> limitedResults = results.asList(FetchOptions.Builder.withLimit(5));
+
+      List<Comments> messagesEntityList = new ArrayList<Comments>();
+      for (Entity entity : limitedResults) {
+          long id = entity.getKey().getId();
+          String name = (String) entity.getProperty("name");
+          String email = (String) entity.getProperty("email");
+          String message = (String) entity.getProperty("clientMessage");
+          long timeStamp = (long) entity.getProperty("timestamp");
+
+          Comments commentsObject = new Comments(name, email, message, timeStamp);
+          messagesEntityList.add(commentsObject);
+      }
+      //adding a list of objects
       response.setContentType("application/json;");
-      response.getWriter().println(convertToJsonUsingGson(messages));
+     
+      response.getWriter().println(convertToJsonUsingGson(messagesEntityList));
+      
+      
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
       String clientMessage = request.getParameter("clientMessage");
+      String name = request.getParameter("name");
+      String email = request.getParameter("email");
       long timeStamp = System.currentTimeMillis();
 
       Entity messageEntity = new Entity("Messages");
-      messageEntity.setProperty("message", clientMessage);
+      messageEntity.setProperty("name", name);
+      messageEntity.setProperty("email", email);
+      messageEntity.setProperty("clientMessage", clientMessage);
       messageEntity.setProperty("timestamp", timeStamp);
 
       DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-      datastore.put(messageEntity);
+      datastore.put(messageEntity); 
+
+      response.setContentType("text/html");
+      if(!clientMessage.equals(' ')){
+        messages.add(clientMessage+"\n");
+      }
+    
+      for(int i=0; i< messages.size(); i++) {
+        response.getWriter().println(messages.get(i));
+      }
 
       response.sendRedirect("/index.html");
     }
 
-  private String convertToJsonUsingGson(List<String> messageList) {
+  private String convertToJsonUsingGson(List<Comments> messageList) {
       Gson gson = new Gson();
       String json = gson.toJson(messageList);
     
@@ -81,7 +107,7 @@ public class DataServlet extends HttpServlet {
 
   private String convertToJson(List<String> messageList) {
       String json = "[ { ";
-      
+
       for(int i = 0; i<(messageList.size()); i= i+2){
           json += " \"message\" : ";
           json += "\""+messageList.get(i)+"\", ";
