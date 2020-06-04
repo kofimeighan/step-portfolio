@@ -23,8 +23,7 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.gson.Gson;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -34,18 +33,17 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-  private ArrayList<String> messages;
+  private List<String> messages;
 
   public void init() {
-      //submitTime = new Date();
       messages = new ArrayList<String>();
   }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-  throws IOException {
+              throws IOException {
 
-      Query query = new Query("Task//");//.addSort("timestamp", SortDirection.DESCENDING);
+      Query query = new Query("messageEntity//");
       DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
       PreparedQuery results = datastore.prepare(query);
     
@@ -64,10 +62,6 @@ public class DataServlet extends HttpServlet {
       String clientMessage = request.getParameter("clientMessage");
       long timeStamp = System.currentTimeMillis();
 
-      /*System.out.println(htmlMessage);
-      messages.add(htmlMessage);
-      Gson gson = new Gson();
-      String json = convertToJson(clientMessage));*/
       Entity messageEntity = new Entity("Messages");
       messageEntity.setProperty("message", clientMessage);
       messageEntity.setProperty("timestamp", timeStamp);
@@ -76,29 +70,29 @@ public class DataServlet extends HttpServlet {
       datastore.put(messageEntity);
 
       response.sendRedirect("/index.html");
-
     }
 
-  private String convertToJsonUsingGson(ArrayList<String> messageList) {
+  private String convertToJsonUsingGson(List<String> messageList) {
       Gson gson = new Gson();
       String json = gson.toJson(messageList);
     
       return json;
   }
 
-  private String convertToJson(ArrayList<String> messageList) {
+  private String convertToJson(List<String> messageList) {
       String json = "[ { ";
-      for(int i = 0; i<(messageList.size());i= i+2){
+      
+      for(int i = 0; i<(messageList.size()); i= i+2){
           json += " \"message\" : ";
           json += "\""+messageList.get(i)+"\", ";
           json += " \"timestamp\" : ";
           json += "\""+messageList.get(i+1)+"\"";
 
-          if(i !=(messageList.size()-1)){
+          if (i !=(messageList.size()-1)){
               json += ", ";
           }
-          else{
-            json += " }";
+          else {
+              json += " }";
           }
       }
 
