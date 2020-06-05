@@ -40,7 +40,7 @@ function createListElement(text) {
   const deleteButtonElement = document.createElement('button');
   deleteButtonElement.innerText = 'Delete';
   deleteButtonElement.addEventListener('click', () => {
-    deleteTask(text);
+    deleteMessage(text);
 
     textElement.remove();
   });
@@ -50,7 +50,7 @@ function createListElement(text) {
   return textElement;
 }
 
-function deleteTask(message) {
+function deleteMessage(message) {
   const params = new URLSearchParams();
   params.append('id', message.id);
   fetch('/delete-data', {method: 'POST', body: params});
