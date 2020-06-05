@@ -12,31 +12,46 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-function sayHello() {
-  console.log("Fetching a Hello");
+async function getLimitedMessage() {
+  /*Leaving these comments in so when I go and try to fix the way it is fetched 
+  I remeber the syntax.
+  let amountOfComments = document.getElementById("commentAmount").value;
+  ?amountOfComments='+ amountOfComments);*/
 
-  fetch('/data').then(response => response.json()).then((jsonString) => {
-    console.log(jsonString);
-    document.getElementById('hello-container').innerText = jsonString; });
-}
-
-async function getMessage() {
-  console.log("Getting the message");
-    
   const response = await fetch('/data');
-  const message = await response.json();
+  const messages = await response.json();
   document.getElementById('message-container').innerText = '';
-  console.log(message);
 
-  const messageHistory = document.getElementById('data-page-message-container');
-  messageHistory.innerHTML = '';
-  //messageHistory.appendChild(createListElement(message));
-  //Included because comment history might be implimented in the future^
+  const messageHistory = 
+    document.getElementById('data-page-message-container');
+ 
+  messages.forEach(message => {
+    messageHistory.appendChild(createListElement(message));
+  });
 }
 
 function createListElement(text) {
-  const liElement = document.createElement('li');
-  liElement.innerText = text;
-  return liElement;
+  const textElement = document.createElement('li');
+  textElement.innerText = text.message;
+
+  const titleElement = document.createElement('span');
+  titleElement.innerText = '';
+
+  const deleteButtonElement = document.createElement('button');
+  deleteButtonElement.innerText = 'Delete';
+  deleteButtonElement.addEventListener('click', () => {
+    deleteTask(text);
+
+    textElement.remove();
+  });
+
+  textElement.appendChild(titleElement);
+  textElement.appendChild(deleteButtonElement);
+  return textElement;
 }
 
+function deleteTask(message) {
+  const params = new URLSearchParams();
+  params.append('id', message.id);
+  fetch('/delete-data', {method: 'POST', body: params});
+}
