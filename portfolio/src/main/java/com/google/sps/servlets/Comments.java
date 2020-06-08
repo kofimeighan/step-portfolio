@@ -31,6 +31,6 @@ public final class Comments {
     }
 
     public String getMessage() {
-        return message;
+        return this.message;
     }
 }
