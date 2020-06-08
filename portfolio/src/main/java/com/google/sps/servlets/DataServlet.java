@@ -36,18 +36,22 @@ public class DataServlet extends HttpServlet {
     private List<String> messages;
     private List<Comments> messagesEntityList;
     private int amtOfComments;
+    private static final String NAME = "name";
+    private static final String EMAIL = "email";
+    private static final String CLIENTMESSAGE = "clientMessage";
+    private static final String TIMESTAMP = "timestamp";
 
     public void init() {
         messages = new ArrayList<String>();
         messagesEntityList = new ArrayList<Comments>();
         amtOfComments = 0;
-
     }
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
         throws IOException {
 
+        //TO-DO:figure out how to sort queries based on timestamp
         Query query = new Query("Messages");
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         PreparedQuery results = datastore.prepare(query);
@@ -55,10 +59,10 @@ public class DataServlet extends HttpServlet {
 
         for (Entity entity : limitedResults) {
             long id = entity.getKey().getId();
-            String name = (String) entity.getProperty("name");
-            String email = (String) entity.getProperty("email");
-            String message = (String) entity.getProperty("clientMessage");
-            long timeStamp = (long) entity.getProperty("timestamp");
+            String name = (String) entity.getProperty(NAME);
+            String email = (String) entity.getProperty(EMAIL);
+            String message = (String) entity.getProperty(CLIENTMESSAGE);
+            long timeStamp = (long) entity.getProperty(TIMESTAMP);
 
             Comments commentsObject = new Comments(id, name, email, message, timeStamp);
             messagesEntityList.add(commentsObject);
@@ -69,18 +73,18 @@ public class DataServlet extends HttpServlet {
     }
 
     @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String clientMessage = request.getParameter("clientMessage");
-        String name = request.getParameter("name");
-        String email = request.getParameter("email");
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException { 
+        String name = request.getParameter(NAME);
+        String email = request.getParameter(EMAIL);
+        String clientMessage = request.getParameter(CLIENTMESSAGE);
         long timeStamp = System.currentTimeMillis();
         amtOfComments = Integer.parseInt(request.getParameter("commentAmount"));
 
         Entity messageEntity = new Entity("Messages");
-        messageEntity.setProperty("name", name);
-        messageEntity.setProperty("email", email);
-        messageEntity.setProperty("clientMessage", clientMessage);
-        messageEntity.setProperty("timestamp", timeStamp);
+        messageEntity.setProperty(NAME, name);
+        messageEntity.setProperty(EMAIL, email);
+        messageEntity.setProperty(CLIENTMESSAGE, clientMessage);
+        messageEntity.setProperty(TIMESTAMP, timeStamp);
 
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         datastore.put(messageEntity); 
@@ -88,7 +92,7 @@ public class DataServlet extends HttpServlet {
         response.setContentType("text/html");
 
         //checking for empty messages
-        if(!clientMessage.equals(' ')){
+        if(!clientMessage.isEmpty()){
             messages.add(clientMessage+"\n");
         }
 
