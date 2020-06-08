@@ -50,8 +50,24 @@ public class DataServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
         throws IOException {
-
+        PrintWriter out = response.getWriter();
+        UserService userService = UserServiceFactory.getUserService();
         //TO-DO:figure out how to sort queries based on timestamp
+
+        //checking if they are logged in
+        if(!userService.isUserLoggedIn()); {
+            String loginUrl = userService.createLoginURL("/data");
+            out.println("<p>Please login here:<a href=\"" + loginUrl + "\">here</a>.</p>");
+            return;
+        }
+
+        //checking if they have logged a username
+        String nickname = getUserNickname(userService.getCurrentUser().getUserId());
+        if (nickname == null || nickname.isEmpty()) {
+            response.sendRedirect("/nickname");
+            return;
+        }
+
         Query query = new Query("Messages");
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         PreparedQuery results = datastore.prepare(query);
