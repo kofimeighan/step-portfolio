@@ -34,10 +34,12 @@ import javax.servlet.http.HttpServletResponse;
 public class DataServlet extends HttpServlet {
 
     private List<String> messages;
+    private List<Comments> messagesEntityList;
     private int amtOfComments;
 
     public void init() {
         messages = new ArrayList<String>();
+        messagesEntityList = new ArrayList<Comments>();
         amtOfComments = 0;
 
     }
@@ -49,8 +51,8 @@ public class DataServlet extends HttpServlet {
         Query query = new Query("Messages");
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         PreparedQuery results = datastore.prepare(query);
+        List<Entity> limitedResults = results.asList(FetchOptions.Builder.withLimit(amtOfComments));
 
-        List<Comments> messagesEntityList = new ArrayList<Comments>();
         for (Entity entity : limitedResults) {
             long id = entity.getKey().getId();
             String name = (String) entity.getProperty("name");
