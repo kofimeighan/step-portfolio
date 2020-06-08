@@ -34,25 +34,26 @@ import javax.servlet.http.HttpServletResponse;
 public class DataServlet extends HttpServlet {
 
     private List<String> messages;
-    private List<Comments> messagesEntityList;
+    private List<Comment> messagesEntityList;
     private int amtOfComments;
     private static final String NAME = "name";
     private static final String EMAIL = "email";
-    private static final String CLIENTMESSAGE = "clientMessage";
+    private static final String CLIENT_MESSAGE = "clientMessage";
     private static final String TIMESTAMP = "timestamp";
+    private static final String ID = "id";
+    private static final String TABLE_NAME = "Messages";
 
     public void init() {
         messages = new ArrayList<String>();
-        messagesEntityList = new ArrayList<Comments>();
+        messagesEntityList = new ArrayList<Comment>();
         amtOfComments = 0;
     }
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
         throws IOException {
-
         //TO-DO:figure out how to sort queries based on timestamp
-        Query query = new Query("Messages");
+        Query query = new Query(TABLE_NAME);
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         PreparedQuery results = datastore.prepare(query);
         List<Entity> limitedResults = results.asList(FetchOptions.Builder.withLimit(amtOfComments));
@@ -61,11 +62,11 @@ public class DataServlet extends HttpServlet {
             long id = entity.getKey().getId();
             String name = (String) entity.getProperty(NAME);
             String email = (String) entity.getProperty(EMAIL);
-            String message = (String) entity.getProperty(CLIENTMESSAGE);
+            String message = (String) entity.getProperty(CLIENT_MESSAGE);
             long timeStamp = (long) entity.getProperty(TIMESTAMP);
 
-            Comments commentsObject = new Comments(id, name, email, message, timeStamp);
-            messagesEntityList.add(commentsObject);
+            Comment comment = new Comments(id, name, email, message, timeStamp);
+            messagesEntityList.add(comment);
         }
 
         response.setContentType("application/json;");
@@ -76,14 +77,14 @@ public class DataServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException { 
         String name = request.getParameter(NAME);
         String email = request.getParameter(EMAIL);
-        String clientMessage = request.getParameter(CLIENTMESSAGE);
+        String clientMessage = request.getParameter(CLIENT_MESSAGE);
         long timeStamp = System.currentTimeMillis();
         amtOfComments = Integer.parseInt(request.getParameter("commentAmount"));
 
-        Entity messageEntity = new Entity("Messages");
+        Entity messageEntity = new Entity(TABLE_NAME);
         messageEntity.setProperty(NAME, name);
         messageEntity.setProperty(EMAIL, email);
-        messageEntity.setProperty(CLIENTMESSAGE, clientMessage);
+        messageEntity.setProperty(CLIENT_MESSAGE, clientMessage);
         messageEntity.setProperty(TIMESTAMP, timeStamp);
 
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -97,7 +98,7 @@ public class DataServlet extends HttpServlet {
         }
 
         //printing each individual message
-        for(int i=0; i< messages.size(); i++) {
+        for(int i=0; i<messages.size(); i++) {
             response.getWriter().println(messages.get(i));
         }
         //TODO:
