@@ -45,7 +45,7 @@
              class="border"
              alt="Kofi & Dylan">
 
-      <body onload="getLimitedMessage()">       
+      <body align="center" onload="getLimitedMessage()">       
         <h5 style="font-size:30px"><b>Leave me a message!</b></h5>
           <form action="/data" method="POST">
             <label for="name">Name:</label>
@@ -55,13 +55,13 @@
             <label for="clientMessage">Message:</label>
               <input type="text" id="clientMessage" name="clientMessage"><br><br>
             <label for="commentAmount">How many comments would you like to show?</label>
-              <input type="number" id="commentAmount" name="commentAmount" min="1" max="30">
+              <input type="number" id="commentAmount" name="commentAmount" min="1" max="30"></br></br>
             <input type="submit" value="Send">
             <h1 id="message-container"></h1>
           </form>
       </body>
 
-      <ul class="messages" id="data-page-message-container"></ul>
+      <ul class="messages" id="data-page-message-container" align="center"></ul>
 
   </body>
 </html>
