@@ -21,6 +21,7 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.*;
@@ -29,73 +30,88 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-  private List<String> messages;
+    private List<String> messages;
+    private List<Comment> messagesEntityList;
+    private int amtOfComments;
+    private static final String NAME = "name";
+    private static final String EMAIL = "email";
+    private static final String CLIENT_MESSAGE = "clientMessage";
+    private static final String TIMESTAMP = "timestamp";
+    private static final String ID = "id";
+    private static final String TABLE_NAME = "Messages";
 
-  public void init() {
-      messages = new ArrayList<String>();
-  }
-
-  @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response)
-              throws IOException {
-
-      Query query = new Query("messageEntity//");
-      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-      PreparedQuery results = datastore.prepare(query);
-    
-      for (Entity entity : results.asIterable()) {
-          long id = entity.getKey().getId();
-          String message = (String) entity.getProperty("message");
-          messages.add(message);
-      }
-
-      response.setContentType("application/json;");
-      response.getWriter().println(convertToJsonUsingGson(messages));
-  }
-
-  @Override
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-      String clientMessage = request.getParameter("clientMessage");
-      long timeStamp = System.currentTimeMillis();
-
-      Entity messageEntity = new Entity("Messages");
-      messageEntity.setProperty("message", clientMessage);
-      messageEntity.setProperty("timestamp", timeStamp);
-
-      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-      datastore.put(messageEntity);
-
-      response.sendRedirect("/index.html");
+    public void init() {
+        messages = new ArrayList<String>();
+        messagesEntityList = new ArrayList<Comment>();
+        amtOfComments = 0;
     }
 
-  private String convertToJsonUsingGson(List<String> messageList) {
-      Gson gson = new Gson();
-      String json = gson.toJson(messageList);
-    
-      return json;
-  }
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws IOException {
+        //TO-DO:figure out how to sort queries based on timestamp
+        Query query = new Query(TABLE_NAME);
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+        PreparedQuery results = datastore.prepare(query);
+        List<Entity> limitedResults = results.asList(FetchOptions.Builder.withLimit(amtOfComments));
 
-  private String convertToJson(List<String> messageList) {
-      String json = "[ { ";
+        for (Entity entity : limitedResults) {
+            long id = entity.getKey().getId();
+            String name = (String) entity.getProperty(NAME);
+            String email = (String) entity.getProperty(EMAIL);
+            String message = (String) entity.getProperty(CLIENT_MESSAGE);
+            long timeStamp = (long) entity.getProperty(TIMESTAMP);
+
+            Comment comment = new Comments(id, name, email, message, timeStamp);
+            messagesEntityList.add(comment);
+        }
+
+        response.setContentType("application/json;");
+        response.getWriter().println(convertToJsonUsingGson(messagesEntityList));
+    }
+
+    @Override
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException { 
+        String name = request.getParameter(NAME);
+        String email = request.getParameter(EMAIL);
+        String clientMessage = request.getParameter(CLIENT_MESSAGE);
+        long timeStamp = System.currentTimeMillis();
+        amtOfComments = Integer.parseInt(request.getParameter("commentAmount"));
+
+        Entity messageEntity = new Entity(TABLE_NAME);
+        messageEntity.setProperty(NAME, name);
+        messageEntity.setProperty(EMAIL, email);
+        messageEntity.setProperty(CLIENT_MESSAGE, clientMessage);
+        messageEntity.setProperty(TIMESTAMP, timeStamp);
+
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+        datastore.put(messageEntity); 
+
+        response.setContentType("text/html");
+
+        //checking for empty messages
+        if(!clientMessage.isEmpty()){
+            messages.add(clientMessage+"\n");
+        }
+
+        //printing each individual message
+        for(int i=0; i<messages.size(); i++) {
+            response.getWriter().println(messages.get(i));
+        }
+        //TODO:
+        //look at a better way to clean the boxes
+        //get the input # from html and send to JS without redirecting so that multiple users
+        //can use the site at once
+        response.sendRedirect("/index.html");
+    }
+
+    private String convertToJsonUsingGson(List<Comments> messageList) {
+        Gson gson = new Gson();
+        String json = gson.toJson(messageList);
       
-      for(int i = 0; i<(messageList.size()); i= i+2){
-          json += " \"message\" : ";
-          json += "\""+messageList.get(i)+"\", ";
-          json += " \"timestamp\" : ";
-          json += "\""+messageList.get(i+1)+"\"";
-
-          if (i !=(messageList.size()-1)){
-              json += ", ";
-          }
-          else {
-              json += " }";
-          }
-      }
-
-      return json;
-  }
+        return json;
+    }
 }
