@@ -26,6 +26,7 @@
       <li><a href="education.html">Education & Activities</a></li>
       <li><a href="pictures.html">Film Pictures</a></li>
       <li><a href="mixes.html">Music Mixes</a></li>
+      <li><a href="login.html">Leave me a message!</a></li>
     </ul>
 
     <h3><b>Who am I?</b></h3>
@@ -44,24 +45,6 @@
              class="center"
              class="border"
              alt="Kofi & Dylan">
-
-      <body align="center" onload="getLimitedMessage()">       
-        <h5 style="font-size:30px"><b>Leave me a message!</b></h5>
-          <form action="/data" method="POST">
-            <label for="name">Name:</label>
-              <input type="text" id="name" name="name"><br><br>
-            <label for="email">Email:</label>
-              <input type="text" id="email" name="email"><br><br>
-            <label for="clientMessage">Message:</label>
-              <input type="text" id="clientMessage" name="clientMessage"><br><br>
-            <label for="commentAmount">How many comments would you like to show?</label>
-              <input type="number" id="commentAmount" name="commentAmount" min="1" max="30"></br></br>
-            <input type="submit" value="Send">
-            <h1 id="message-container"></h1>
-          </form>
-      </body>
-
-      <ul class="messages" id="data-page-message-container" align="center"></ul>
 
   </body>
 </html>
