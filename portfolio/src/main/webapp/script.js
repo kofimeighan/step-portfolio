@@ -13,21 +13,26 @@
 // limitations under the License.
 
 async function getLimitedMessage() {
-  /*Leaving these comments in so when I go and try to fix the way it is fetched 
-  I remeber the syntax.
-  let amountOfComments = document.getElementById("commentAmount").value;
-  ?amountOfComments='+ amountOfComments);*/
-
-  const response = await fetch('/data');
+	let amountOfComments = document.getElementById("commentAmount").value
+  const response = await fetch('/data?amtOfComments='+amountOfComments);
   const messages = await response.json();
   document.getElementById('message-container').innerText = '';
 
+	document.getElementById('data-page-message-container').innerHTML= '';
   const messageHistory = 
     document.getElementById('data-page-message-container');
  
   messages.forEach(message => {
     messageHistory.appendChild(createListElement(message));
   });
+}
+
+async function checkLoginStatus() {
+  const response = await fetch('/login');
+  const buttonHTML = await response.text();
+	
+  document.getElementById("submit").innerHTML = ' ';
+ 	document.getElementById("submit").innerHTML = buttonHTML;
 }
 
 function createListElement(text) {
