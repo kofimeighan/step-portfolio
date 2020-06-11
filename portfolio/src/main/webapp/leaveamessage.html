@@ -8,10 +8,9 @@
   </head>
 
   <body bgcolor ="aliceblue">  
-    <h1 align="center">Kofi Meighan</h1>
 
     <!--Personal info links at the top left of the screen-->
-    <ul class="info" align="left"><b>
+    <ul class="info"><b>
       <li><a href="https://github.com/kofimeighan">GitHub</a></li>
       <li><a href="https://www.linkedin.com/in/kofimeighan/">LinkedIn</a></li>
       <li>(561) 613-1936</li>
@@ -29,8 +28,8 @@
       <li><a href="leaveamessage.html">Leave me a message!</a></li>
     </ul>
     
-    	<body align="center" onload="checkLoginStatus(); getLimitedMessage();">
-        <h5 style="font-size:30px"><b>Leave me a message!</b></h5>
+    	<body class="input-boxes" onload="onLoad()">
+        <h2 class="secondary-header">Leave me a message!</h2>
           <form action="/data" method="POST" id="form">
             <label for="name">Name:</label>
               <input type="text" id="name" name="name"><br><br>
@@ -38,8 +37,11 @@
               <input type="text" id="clientMessage" name="clientMessage"><br><br>
             <div id="submit"></div>
           </form>
-            <label for="commentAmount">How many comments would you like to show?</label>
-            <select name="commentAmount" id="commentAmount" onchange="getLimitedMessage()">
+            <label for="commentAmount">
+              How many comments would you like to show?</label>
+            <select name="commentAmount" 
+            	      id="commentAmount" 
+                    onchange="getLimitedMessage()">
               <option value="5" selected>5</option>
               <option value="10">10</option>
               <option value="15">15</option>
