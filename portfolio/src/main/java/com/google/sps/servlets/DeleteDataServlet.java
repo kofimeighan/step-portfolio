@@ -28,13 +28,17 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/delete-data")
 public class DeleteDataServlet extends HttpServlet {
 
+    public static final String ID = "id"
+    private static final String TABLE_NAME = "Messages";
+
+
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         //retrieving ID from the client
-        long id = Long.parseLong(request.getParameter("id"));
+        long id = Long.parseLong(request.getParameter(ID));
 
         //creating a key for the Messages Entity to delete the specific message with the ID
-        Key dataEntityKey = KeyFactory.createKey("Messages", id);
+        Key dataEntityKey = KeyFactory.createKey(TABLE_NAME, id);
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         datastore.delete(dataEntityKey);
     }
