@@ -65,10 +65,11 @@ public class DataServlet extends HttpServlet {
             String message = (String) entity.getProperty(CLIENTMESSAGE);
             long timeStamp = (long) entity.getProperty(TIMESTAMP);
 
-            Comment comments = new Comment(id, name, email, message, timeStamp);
-            messagesEntityList.add(comments);
+            if(!message.isEmpty()) {
+              Comment comments = new Comment(id, name, email, message, timeStamp);
+              messagesEntityList.add(comments);
+            }
         }
-
 
         response.setContentType("application/json");
         response.getWriter().println(convertToJsonUsingGson(messagesEntityList));   
@@ -94,14 +95,11 @@ public class DataServlet extends HttpServlet {
 
         //checking for empty messages
         List<String> messages = new ArrayList<String>();
-        if(!clientMessage.equals(" ")){
+        if(!clientMessage.isEmpty()){
             messages.add(clientMessage+"\n");
+            response.getWriter().println(messages.get(0));
         }
 
-        //printing each individual message
-        for(int i=0; i< messages.size(); i++) {
-            response.getWriter().println(messages.get(i));
-        }
         response.sendRedirect("/leaveamessage.html");
     }
 
