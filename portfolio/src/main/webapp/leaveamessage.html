@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>About Kofi Meighan !</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+  </head>
+
+  <body bgcolor ="aliceblue">  
+
+    <!--Personal info links at the top left of the screen-->
+    <ul class="info"><b>
+      <li><a href="https://github.com/kofimeighan">GitHub</a></li>
+      <li><a href="https://www.linkedin.com/in/kofimeighan/">LinkedIn</a></li>
+      <li>(561) 613-1936</li>
+      <li><a href="mailto:kofimeighan@google.com">
+        kofimeighan@google.com</a></li>
+      </b>
+    </ul>
+
+    <!--Navigation bar at the top of the screen-->
+    <ul class="nav">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="education.html">Education & Activities</a></li>
+      <li><a href="pictures.html">Film Pictures</a></li>
+      <li><a href="mixes.html">Music Mixes</a></li>
+      <li><a href="leaveamessage.html">Leave me a message!</a></li>
+    </ul>
+    
+    	<body class="input-boxes" onload="onLoad()">
+        <h2 class="secondary-header">Leave me a message!</h2>
+          <form action="/data" method="POST" id="form">
+            <label for="name">Name:</label>
+              <input type="text" id="name" name="name"><br><br>
+            <label for="clientMessage">Message:</label>
+              <input type="text" id="clientMessage" name="clientMessage"><br><br>
+            <div id="submit"></div>
+          </form>
+            <label for="commentAmount">
+              How many comments would you like to show?</label>
+            <select name="commentAmount" 
+            	      id="commentAmount" 
+                    onchange="getLimitedMessage()">
+              <option value="5" selected>5</option>
+              <option value="10">10</option>
+              <option value="15">15</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          <h1 id="message-container" align="center"></h1>
+      	<ul class="messages" id="data-page-message-container" align="center"></ul>
+    	</body>
+  </body>
+</html>
+        
+

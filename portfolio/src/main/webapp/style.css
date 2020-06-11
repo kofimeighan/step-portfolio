@@ -1,6 +1,7 @@
 #content {
   margin-left: auto;
   margin-right: auto;
+  text-align: center;
   width: 650px;
 }
 
@@ -76,8 +77,10 @@
   border: thick solid black
 }
 
-#messages {
+.messages {
   list-style-type: none;
+  display: inline-block;
+  align-content: center;
 }
 
 .messages li {
@@ -90,4 +93,13 @@
 
 .messages span {
   flex-grow: 1;
+}
+
+.secondary-header {
+  text-align: center;
+  font-weight: bold
+}
+
+.input-boxes {
+  text-align: center;
 }
