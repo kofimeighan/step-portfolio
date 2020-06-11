@@ -60,3 +60,8 @@ function deleteMessage(message) {
   params.append('id', message.id);
   fetch('/delete-data', {method: 'POST', body: params});
 }
+
+function onLoad() {
+  checkLoginStatus();
+  getLimitedMessage();
+}
