@@ -67,6 +67,7 @@ function deleteMessage(message) {
   fetch('/delete-data', {method: 'POST', body: params});
 }
 
+//global variable for map functions
 let map;
 
 function initMap() {
@@ -78,8 +79,6 @@ function initMap() {
 }
 
 function codeAddress(address) {
-  
-  //reads null address. figure outn how htm,l is relaying address.
   let goTo = address;
   if(goTo == undefined) {
     goTo = document.getElementById('address').value;
