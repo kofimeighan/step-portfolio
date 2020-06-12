@@ -38,7 +38,7 @@ public class DataServlet extends HttpServlet {
 
     private static final String NAME = "name";
     private static final String EMAIL = "email";
-    private static final String CLIENT_MESSAGE = "clientMessage";
+    private static final String CLIENTMESSAGE = "clientMessage";
     private static final String TIMESTAMP = "timestamp";
     private static final String TABLENAME = "Messages";
 
@@ -89,7 +89,7 @@ public class DataServlet extends HttpServlet {
         Entity messageEntity = new Entity(TABLENAME);
         messageEntity.setProperty(NAME, name);
         messageEntity.setProperty(EMAIL, email);
-        messageEntity.setProperty(CLIENT_MESSAGE, clientMessage);
+        messageEntity.setProperty(CLIENTMESSAGE, clientMessage);
         messageEntity.setProperty(TIMESTAMP, timeStamp);
 
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
