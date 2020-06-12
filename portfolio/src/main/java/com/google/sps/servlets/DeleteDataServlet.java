@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/delete-data")
 public class DeleteDataServlet extends HttpServlet {
 
-    public static final String ID = "id"
+    public static final String ID = "id";
     private static final String TABLE_NAME = "Messages";
 
 
