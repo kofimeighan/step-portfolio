@@ -12,6 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+function onLoad() {
+  checkLoginStatus();
+  getLimitedMessage();
+  initMap();
+} 
+
 async function getLimitedMessage() {
 	let amountOfComments = document.getElementById("commentAmount").value
   const response = await fetch('/data?amtOfComments='+amountOfComments);
@@ -61,7 +67,35 @@ function deleteMessage(message) {
   fetch('/delete-data', {method: 'POST', body: params});
 }
 
-function onLoad() {
-  checkLoginStatus();
-  getLimitedMessage();
+let map;
+
+function initMap() {
+  map = new google.maps.Map(
+    document.getElementById('map'), 
+    {center: {lat: 37.421903, lng: -122.084674}, zoom: 2,
+    mapTypeId: "satellite"});
+  console.log('done????');
+}
+
+function codeAddress(address) {
+  
+  //reads null address. figure outn how htm,l is relaying address.
+  let goTo = address;
+  if(goTo == undefined) {
+    goTo = document.getElementById('address').value;
+  }
+
+  let geocoder = new google.maps.Geocoder();
+  geocoder.geocode( { 'address': goTo }, function(results, status) {
+    if (status == 'OK') {
+      map.setCenter(results[0].geometry.location);
+      map.setZoom(16);
+      var marker = new google.maps.Marker({
+          map: map,
+          position: results[0].geometry.location
+      });
+    } else {
+      alert('Geocode was not successful for the following reason: ' + status);
+    }
+  });
 }
