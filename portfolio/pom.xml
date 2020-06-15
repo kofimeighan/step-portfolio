@@ -56,6 +56,7 @@
           <!-- TODO: set project ID. -->
           <deploy.projectId>kofimeighan-step-2020</deploy.projectId>
           <deploy.version>1</deploy.version>
+          <devserver.port>8888</devserver.port>
         </configuration>
       </plugin>
     </plugins>
