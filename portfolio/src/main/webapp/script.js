@@ -73,7 +73,7 @@ let map;
 function initMap() {
   map = new google.maps.Map(
     document.getElementById('map'), 
-    {center: {lat: 37.421903, lng: -122.084674}, zoom: 2,
+    {center: {lat: 37.421903, lng: -122.084674}, zoom: 18,
     mapTypeId: "satellite"});
   console.log('done????');
 }
@@ -88,7 +88,7 @@ function codeAddress(address) {
   geocoder.geocode( { 'address': goTo }, function(results, status) {
     if (status == 'OK') {
       map.setCenter(results[0].geometry.location);
-      map.setZoom(16);
+      map.setZoom(18);
       var marker = new google.maps.Marker({
           map: map,
           position: results[0].geometry.location
