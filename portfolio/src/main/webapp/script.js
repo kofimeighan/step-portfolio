@@ -13,11 +13,13 @@
 // limitations under the License.
 
 function onLoad() {
+  "Checks whether the user is logged in, if so, the client renders the comments. Independently, the map is initialized."
   checkLoginStatus();
   getLimitedMessage();
   initMap();
 } 
 
+//Sends the amount of comments from the client to the server so the correct amount is sent
 async function getLimitedMessage() {
 	let amountOfComments = document.getElementById("commentAmount").value
   const response = await fetch('/data?amtOfComments='+amountOfComments);
@@ -33,6 +35,7 @@ async function getLimitedMessage() {
   });
 }
 
+//Renders whether the login button or the submit comment button is shown on the client
 async function checkLoginStatus() {
   const response = await fetch('/login');
   const buttonHTML = await response.text();
@@ -61,6 +64,7 @@ function createListElement(text) {
   return textElement;
 }
 
+
 function deleteMessage(message) {
   const params = new URLSearchParams();
   params.append('id', message.id);
@@ -69,14 +73,15 @@ function deleteMessage(message) {
 
 //global variable for map functions
 let map;
+var INITIAL_LAT = 37.421903; 
+var INITIAL_LNG = -122.084674;
 
 function initMap() {
   map = new google.maps.Map(
     document.getElementById('map'), 
-    {center: {lat: 37.421903, lng: -122.084674}, zoom: 18,
+    {center: {lat: INITIAL_LAT, lng: INITIAL_LNG}, zoom: 18,
     mapTypeId: "satellite"});
-  console.log('done????');
-}
+  }
 
 function codeAddress(address) {
   let goTo = address;
