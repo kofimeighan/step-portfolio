@@ -12,6 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+function onLoad() {
+  "Checks whether the user is logged in, if so, the client renders the comments. Independently, the map is initialized."
+  checkLoginStatus();
+  getLimitedMessage();
+  initMap();
+} 
+
+//Sends the amount of comments from the client to the server so the correct amount is sent
 async function getLimitedMessage() {
 	let amountOfComments = document.getElementById("commentAmount").value
   const response = await fetch('/data?amtOfComments='+amountOfComments);
@@ -27,6 +35,7 @@ async function getLimitedMessage() {
   });
 }
 
+//Renders whether the login button or the submit comment button is shown on the client
 async function checkLoginStatus() {
   const response = await fetch('/login');
   const buttonHTML = await response.text();
@@ -55,13 +64,42 @@ function createListElement(text) {
   return textElement;
 }
 
+
 function deleteMessage(message) {
   const params = new URLSearchParams();
   params.append('id', message.id);
   fetch('/delete-data', {method: 'POST', body: params});
 }
 
-function onLoad() {
-  checkLoginStatus();
-  getLimitedMessage();
+//global variable for map functions
+let map;
+var INITIAL_LAT = 37.421903; 
+var INITIAL_LNG = -122.084674;
+
+function initMap() {
+  map = new google.maps.Map(
+    document.getElementById('map'), 
+    {center: {lat: INITIAL_LAT, lng: INITIAL_LNG}, zoom: 18,
+    mapTypeId: "satellite"});
+  }
+
+function codeAddress(address) {
+  let goTo = address;
+  if(goTo == undefined) {
+    goTo = document.getElementById('address').value;
+  }
+
+  let geocoder = new google.maps.Geocoder();
+  geocoder.geocode( { 'address': goTo }, function(results, status) {
+    if (status == 'OK') {
+      map.setCenter(results[0].geometry.location);
+      map.setZoom(18);
+      var marker = new google.maps.Marker({
+          map: map,
+          position: results[0].geometry.location
+      });
+    } else {
+      alert('Geocode was not successful for the following reason: ' + status);
+    }
+  });
 }

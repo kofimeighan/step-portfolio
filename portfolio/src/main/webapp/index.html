@@ -4,10 +4,11 @@
     <meta charset="utf-8">
     <title>About Kofi Meighan !</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDm9goTgCcdTvHJCIQ_36IXV2AcfiZKHko"></script>
     <script src="script.js"></script>
   </head>
 
-  <body bgcolor ="aliceblue">  
+  <body onload="initMap();" bgcolor="aliceblue">  
     <h1 align="center">Kofi Meighan</h1>
 
     <!--Personal info links at the top left of the screen-->
@@ -38,13 +39,27 @@
         That was the start, and finally being able to apply my skills to 
         projects that will advance technology and positively develop 
         someone's experience is what continues to fuel me to learn and make 
-        change throughout the world.
+        change throughout the world.</p>
 
         <img src="images/kofianddylan.jpg" 
              height=350px 
              class="center"
              class="border"
-             alt="Kofi & Dylan">
+             alt="Kofi & Dylan"></br></br>
+
+    <div class="input-boxes">
+      <h4>A few places that tells you about who I am</h4>
+        <div class="dropdown">
+          <button class="dropbtn">Places that define me</button>
+            <div class="dropdown-content">
+              <button onclick="codeAddress('Columbia University, New York, NY 10027')">Columbia University</button>
+              <button onclick="codeAddress('Boynton Beach, FL')">Home</button>
+              <button onclick="codeAddress('Canal St, New York, NY')">Canal St.</button>
+              <button onclick="codeAddress('345 Spear St, San Francisco, CA 94105')">My would have been Google office</button>
+            </div></br></br></div>
+        </div><br>
+      <div class="input-boxes" id="description"></div></br></br>
+    <div id="map"></div>
 
   </body>
 </html>
