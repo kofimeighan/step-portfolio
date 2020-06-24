@@ -5,9 +5,11 @@
   width: 650px;
 }
 
+body {
+  background-color: #f0f8ff;
+}
+
 .info {
-  align-content: left;
-  list-style-position: left;
   list-style-type: none;
   margin: 0;
   padding 0;
@@ -24,7 +26,6 @@
   background-color: #33ccff;
   list-style-type: none;
   margin: 0;
-  padding:0;
   text-align: left;   
 }
 
@@ -40,7 +41,6 @@
 .audio {
   list-style-type: none;
   margin: 0;
-  padding:0;
   text-align: center;
 }
 
@@ -96,7 +96,6 @@
 }
 
 .secondary-header {
-  font-weight: bold;
   text-align: center;
 }
 
