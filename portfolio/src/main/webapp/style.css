@@ -10,8 +10,6 @@ body {
 }
 
 .info {
-  align-content: left;
-  list-style-position: left;
   list-style-type: none;
   margin: 0;
   padding 0;
@@ -20,7 +18,6 @@ body {
 
 .info li {
   font size: 40px;
-  font-weight: normal;
   text-align: right;
   padding: 0;
 }
@@ -29,7 +26,6 @@ body {
   background-color: #33ccff;
   list-style-type: none;
   margin: 0;
-  padding:0;
   text-align: left;   
 }
 
@@ -45,7 +41,6 @@ body {
 .audio {
   list-style-type: none;
   margin: 0;
-  padding:0;
   text-align: center;
 }
 
@@ -101,7 +96,6 @@ body {
 }
 
 .secondary-header {
-  font-weight: bold;
   text-align: center;
 }
 
